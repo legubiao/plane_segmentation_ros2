@@ -1,9 +1,9 @@
-# Plane Segmentation
-
+# Plane Segmentation ROS2
 ## Overview
-This is a C++ ROS package for extracting convex polygons from elevation maps.
+This is a C++ ROS2 package for extracting convex polygons from elevation maps.
 In a first step, the terrain is segmented into planes, and their non-convex contour is extracted.
 In a second step, a local convex approximation can be obtained.
+
 fork from: https://github.com/leggedrobotics/elevation_mapping_cupy/tree/main/plane_segmentation
 
 ## Usage
