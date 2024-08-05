@@ -19,7 +19,7 @@ TEST(TestGridMapDerivative, initialization) {  // NOLINT
   GridMapIterator iterator(map);
 
   // Derivative filter.
-  derivative::GridMapDerivative derivativeFilter;
+  const derivative::GridMapDerivative derivativeFilter;
   Eigen::Vector2d gradient;
   Eigen::Matrix2d curvature;
 
@@ -31,7 +31,8 @@ TEST(TestGridMapDerivative, initialization) {  // NOLINT
     EXPECT_TRUE(gradient.norm() < threshold);
 
     // Compute gradient and curvature.
-    derivativeFilter.estimateGradientAndCurvature(map, gradient, curvature, *iterator, H);
+    derivativeFilter.estimateGradientAndCurvature(map, gradient, curvature,
+                                                  *iterator, H);
     EXPECT_TRUE(gradient.norm() < threshold && curvature.norm() < threshold);
   }
 

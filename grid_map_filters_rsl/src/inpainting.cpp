@@ -22,7 +22,8 @@
 namespace grid_map {
 namespace inpainting {
 
-void minValues(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut) {
+void minValues(grid_map::GridMap& map, const std::string& layerIn,
+               const std::string& layerOut) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -39,8 +40,10 @@ void minValues(grid_map::GridMap& map, const std::string& layerIn, const std::st
   const int numRows = H_in.rows();
   const int maxRowId = numRows - 1;
 
-  // Common operation of updating the minimum and keeping track if the minimum was updated.
-  auto compareAndStoreMin = [](float newValue, float& currentMin, bool& changedValue) {
+  // Common operation of updating the minimum and keeping track if the minimum
+  // was updated.
+  auto compareAndStoreMin = [](float newValue, float& currentMin,
+                               bool& changedValue) {
     if (!std::isnan(newValue)) {
       if (newValue < currentMin || std::isnan(currentMin)) {
         currentMin = newValue;
@@ -50,10 +53,12 @@ void minValues(grid_map::GridMap& map, const std::string& layerIn, const std::st
   };
 
   /*
-   * Fill each cell that needs inpainting with the min of its neighbours until the map doesn't change anymore.
-   * This way each inpainted area gets the minimum value along its contour.
+   * Fill each cell that needs inpainting with the min of its neighbours until
+   * the map doesn't change anymore. This way each inpainted area gets the
+   * minimum value along its contour.
    *
-   * We will be reading and writing to H_out during iteration. However, the aliasing does not break the correctness of the algorithm.
+   * We will be reading and writing to H_out during iteration. However, the
+   * aliasing does not break the correctness of the algorithm.
    */
   bool hasAtLeastOneValue = true;
   bool changedValue = true;
@@ -93,7 +98,8 @@ void minValues(grid_map::GridMap& map, const std::string& layerIn, const std::st
   }
 }
 
-void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut) {
+void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn,
+                           const std::string& layerOut) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -123,7 +129,8 @@ void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, c
   for (auto colId = 0; colId < H_in.cols(); ++colId) {
     for (auto rowId = 0; rowId < H_in.rows(); ++rowId) {
       if (std::isnan(H_in(rowId, colId))) {
-        // Note: if we don't find a valid neighbour, we use the previous index-value pair.
+        // Note: if we don't find a valid neighbour, we use the previous
+        // index-value pair.
         auto minValue = infinity;
         const Eigen::Vector2i index0(rowId, colId);
 
@@ -170,7 +177,8 @@ void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, c
         }
 
         // Cannot interpolate if there are not 4 corner points.
-        if (std::any_of(values.begin(), values.end(), [](float value) { return std::isnan(value); })) {
+        if (std::any_of(values.begin(), values.end(),
+                        [](float value) { return std::isnan(value); })) {
           if (minValue < infinity) {
             H_out(rowId, colId) = minValue;
           } else {
@@ -179,7 +187,8 @@ void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, c
           continue;
         }
 
-        // Interpolation weights (https://en.wikipedia.org/wiki/Bilinear_interpolation).
+        // Interpolation weights
+        // (https://en.wikipedia.org/wiki/Bilinear_interpolation).
         for (auto id = 0U; id < 4U; ++id) {
           A(id, 1U) = static_cast<float>(indices[id].x());
           A(id, 2U) = static_cast<float>(indices[id].y());
@@ -189,8 +198,9 @@ void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, c
         weights = A.colPivHouseholderQr().solve(b);
 
         // Value according to bi-linear interpolation.
-        H_out(rowId, colId) = weights.dot(Eigen::Vector4f(1.0, static_cast<float>(index0.x()), static_cast<float>(index0.y()),
-                                                          static_cast<float>(index0.x() * index0.y())));
+        H_out(rowId, colId) = weights.dot(Eigen::Vector4f(
+            1.0, static_cast<float>(index0.x()), static_cast<float>(index0.y()),
+            static_cast<float>(index0.x() * index0.y())));
       }
     }
   }
@@ -198,11 +208,13 @@ void biLinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, c
   // If failed, try again.
   if (!success) {
     map.get(layerIn) = map.get(layerOut);
-    return nonlinearInterpolation(map, layerIn, layerOut, 2. * map.getResolution());
+    return nonlinearInterpolation(map, layerIn, layerOut,
+                                  2. * map.getResolution());
   }
 }
 
-void nonlinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, double inpaintRadius) {
+void nonlinearInterpolation(grid_map::GridMap& map, const std::string& layerIn,
+                            const std::string& layerOut, double inpaintRadius) {
   // Create new layer if missing.
   if (!map.exists(layerOut)) {
     map.add(layerOut);
@@ -212,7 +224,8 @@ void nonlinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, 
   const grid_map::Matrix& H_in = map.get(layerIn);
 
   // Create mask.
-  Eigen::Matrix<uchar, -1, -1> mask = H_in.unaryExpr([](float val) { return (std::isnan(val)) ? uchar(1) : uchar(0); });
+  Eigen::Matrix<uchar, -1, -1> mask = H_in.unaryExpr(
+      [](float val) { return (std::isnan(val)) ? uchar(1) : uchar(0); });
   cv::Mat maskImage;
   cv::eigen2cv(mask, maskImage);
 
@@ -220,17 +233,20 @@ void nonlinearInterpolation(grid_map::GridMap& map, const std::string& layerIn, 
   cv::Mat elevationImageIn;
   const float minValue = H_in.minCoeffOfFinites();
   const float maxValue = H_in.maxCoeffOfFinites();
-  grid_map::GridMapCvConverter::toImage<unsigned char, 1>(map, layerIn, CV_8UC1, minValue, maxValue, elevationImageIn);
+  grid_map::GridMapCvConverter::toImage<unsigned char, 1>(
+      map, layerIn, CV_8UC1, minValue, maxValue, elevationImageIn);
 
   // Inpainting.
   cv::Mat elevationImageOut;
   const double radiusInPixels = inpaintRadius / map.getResolution();
-  cv::inpaint(elevationImageIn, maskImage, elevationImageOut, radiusInPixels, cv::INPAINT_NS);
+  cv::inpaint(elevationImageIn, maskImage, elevationImageOut, radiusInPixels,
+              cv::INPAINT_NS);
 
   // Get inpainting as float.
   cv::Mat filledImageFloat;
   constexpr float maxUCharValue = 255.F;
-  elevationImageOut.convertTo(filledImageFloat, CV_32F, (maxValue - minValue) / maxUCharValue, minValue);
+  elevationImageOut.convertTo(filledImageFloat, CV_32F,
+                              (maxValue - minValue) / maxUCharValue, minValue);
 
   // Copy inpainted values back to elevation map.
   cv::Mat elevationImageFloat;
@@ -277,9 +293,11 @@ void resample(grid_map::GridMap& map, const std::string& layer, double newRes) {
     cv::resize(elevationImage, resizedImage, dim, 0, 0, cv::INTER_LINEAR);
     cv::cv2eigen(resizedImage, elevationMap);
 
-    // Compute true new resolution. Might be slightly different due to rounding. Take average of both dimensions.
+    // Compute true new resolution. Might be slightly different due to rounding.
+    // Take average of both dimensions.
     grid_map::Size newSize = {elevationMap.rows(), elevationMap.cols()};
-    newRes = 0.5 * ((oldSize[0] * oldRes) / newSize[0] + (oldSize[1] * oldRes) / newSize[1]);
+    newRes = 0.5 * ((oldSize[0] * oldRes) / newSize[0] +
+                    (oldSize[1] * oldRes) / newSize[1]);
 
     // Store new map.
     map.setGeometry({newSize[0] * newRes, newSize[1] * newRes}, newRes, oldPos);

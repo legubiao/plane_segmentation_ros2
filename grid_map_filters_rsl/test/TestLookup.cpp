@@ -21,7 +21,8 @@ TEST(TestLookup, maxValue_constant_map) {  // NOLINT
   {  // Normal lookup
     const grid_map::Position position1(-0.1, -0.2);
     const grid_map::Position position2(0.3, 0.4);
-    const auto result = lookup::maxValueBetweenLocations(position1, position2, map, data);
+    const auto result =
+        lookup::maxValueBetweenLocations(position1, position2, map, data);
     ASSERT_TRUE(result.isValid);
     EXPECT_DOUBLE_EQ(result.value, mapValue);
   }
@@ -29,7 +30,8 @@ TEST(TestLookup, maxValue_constant_map) {  // NOLINT
   {  // Start and end are the same
     const grid_map::Position position1(-0.1, -0.2);
     const grid_map::Position position2 = position1;
-    const auto result = lookup::maxValueBetweenLocations(position1, position2, map, data);
+    const auto result =
+        lookup::maxValueBetweenLocations(position1, position2, map, data);
     ASSERT_TRUE(result.isValid);
     EXPECT_DOUBLE_EQ(result.value, mapValue);
   }
@@ -37,7 +39,8 @@ TEST(TestLookup, maxValue_constant_map) {  // NOLINT
   {  // Start and end are outside of the map
     const grid_map::Position position1(1000.0, 1000.0);
     const grid_map::Position position2(2000.0, 2000.0);
-    const auto result = lookup::maxValueBetweenLocations(position1, position2, map, data);
+    const auto result =
+        lookup::maxValueBetweenLocations(position1, position2, map, data);
     ASSERT_TRUE(result.isValid);
     EXPECT_DOUBLE_EQ(result.value, mapValue);
   }
@@ -62,7 +65,8 @@ TEST(TestLookup, maxValue_in_middle_map) {  // NOLINT
 
   const grid_map::Position position1(-0.5, -0.5);
   const grid_map::Position position2(0.5, 0.5);
-  const auto result = lookup::maxValueBetweenLocations(position1, position2, map, data);
+  const auto result =
+      lookup::maxValueBetweenLocations(position1, position2, map, data);
   ASSERT_TRUE(result.isValid);
   EXPECT_DOUBLE_EQ(result.value, checkMaxValue);
 }
@@ -77,6 +81,7 @@ TEST(TestLookup, maxValue_onlyNaN) {  // NOLINT
 
   const grid_map::Position position1(-0.1, -0.2);
   const grid_map::Position position2(0.3, 0.4);
-  const auto result = lookup::maxValueBetweenLocations(position1, position2, map, data);
+  const auto result =
+      lookup::maxValueBetweenLocations(position1, position2, map, data);
   ASSERT_FALSE(result.isValid);
 }

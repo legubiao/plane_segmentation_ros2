@@ -26,7 +26,7 @@ namespace processing {
  * @param kernelSize    vicinity considered by filter (must be odd).
  * @param inpaint       if true, also replaces potential nan values by the maximum
  */
-void dilate(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, const grid_map::Matrix& mask, int kernelSize,
+void dilate(GridMap& map, const std::string& layerIn, const std::string& layerOut, const Matrix& mask, int kernelSize,
             bool inpaint = true);
 
 /**
@@ -39,7 +39,7 @@ void dilate(grid_map::GridMap& map, const std::string& layerIn, const std::strin
  * @param kernelSize    vicinity considered by filter (must be odd).
  * @param inpaint       if true, also replaces potential nan values by the minimum
  */
-void erode(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, const grid_map::Matrix& mask, int kernelSize,
+void erode(GridMap& map, const std::string& layerIn, const std::string& layerOut, const Matrix& mask, int kernelSize,
            bool inpaint = true);
 
 /**
@@ -49,7 +49,7 @@ void erode(grid_map::GridMap& map, const std::string& layerIn, const std::string
  * @param layerIn       reference layer (filter is applied wrt this layer)
  * @param layerOut      output layer (filtered map is written into this layer)
  */
-void outline(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut);
+void outline(GridMap& map, const std::string& layerIn, const std::string& layerOut);
 
 /**
  * @brief Replaces values by output of a function. In-place operation (layerIn = layerOut) is NOT supported. Supports nan values.
@@ -59,8 +59,8 @@ void outline(grid_map::GridMap& map, const std::string& layerIn, const std::stri
  * @param layerOut      output layer (filtered map is written into this layer)
  * @param kernelSize    vicinity considered by filter (must be odd).
  */
-void applyKernelFunction(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, int kernelSize,
-                         std::function<float(const Eigen::Ref<const grid_map::GridMap::Matrix>&)> func);
+void applyKernelFunction(GridMap& map, const std::string& layerIn, const std::string& layerOut, int kernelSize,
+                         std::function<float(const Eigen::Ref<const GridMap::Matrix>&)> func);
 
 }  // namespace processing
 }  // namespace grid_map

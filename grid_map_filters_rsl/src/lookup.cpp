@@ -12,19 +12,23 @@
 // stl.
 #include <limits>
 
-namespace grid_map {
-namespace lookup {
+namespace grid_map::lookup {
 
-LookupResult maxValueBetweenLocations(const grid_map::Position& position1, const grid_map::Position& position2,
-                                      const grid_map::GridMap& gridMap, const grid_map::Matrix& data) {
-  // Map corner points into grid map. The line iteration doesn't account for the case where the line does not intersect the map.
-  const grid_map::Position startPos = projectToMapWithMargin(gridMap, position1);
+LookupResult maxValueBetweenLocations(const grid_map::Position& position1,
+                                      const grid_map::Position& position2,
+                                      const grid_map::GridMap& gridMap,
+                                      const grid_map::Matrix& data) {
+  // Map corner points into grid map. The line iteration doesn't account for the
+  // case where the line does not intersect the map.
+  const grid_map::Position startPos =
+      projectToMapWithMargin(gridMap, position1);
   const grid_map::Position endPos = projectToMapWithMargin(gridMap, position2);
 
   // Line iteration
   float searchMaxValue = std::numeric_limits<float>::lowest();
   grid_map::Index maxIndex(0, 0);
-  for (grid_map::LineIterator iterator(gridMap, startPos, endPos); !iterator.isPastEnd(); ++iterator) {
+  for (grid_map::LineIterator iterator(gridMap, startPos, endPos);
+       !iterator.isPastEnd(); ++iterator) {
     const grid_map::Index index = *iterator;
     const auto value = data(index(0), index(1));
     if (std::isfinite(value)) {
@@ -37,19 +41,25 @@ LookupResult maxValueBetweenLocations(const grid_map::Position& position1, const
   grid_map::Position maxPosition;
   gridMap.getPosition(maxIndex, maxPosition);
 
-  const bool maxValueFound = searchMaxValue > std::numeric_limits<float>::lowest();
+  const bool maxValueFound =
+      searchMaxValue > std::numeric_limits<float>::lowest();
   return {maxValueFound, searchMaxValue, maxPosition};
 }
 
-std::vector<grid_map::Position3> valuesBetweenLocations(const grid_map::Position& position1, const grid_map::Position& position2,
-                                                        const grid_map::GridMap& gridMap, const grid_map::Matrix& data) {
-  // Map corner points into grid map. The line iteration doesn't account for the case where the line does not intersect the map.
-  const grid_map::Position startPos = projectToMapWithMargin(gridMap, position1);
+std::vector<grid_map::Position3> valuesBetweenLocations(
+    const grid_map::Position& position1, const grid_map::Position& position2,
+    const grid_map::GridMap& gridMap, const grid_map::Matrix& data) {
+  // Map corner points into grid map. The line iteration doesn't account for the
+  // case where the line does not intersect the map.
+  const grid_map::Position startPos =
+      projectToMapWithMargin(gridMap, position1);
   const grid_map::Position endPos = projectToMapWithMargin(gridMap, position2);
 
   // Approximate amount of points to reserve memory
-  const auto manhattanDistance = std::max(std::abs(endPos.x() - startPos.x()), std::abs(endPos.y() - startPos.y()));
-  const int manhattanPixels = std::ceil(manhattanDistance / gridMap.getResolution()) + 1;
+  const auto manhattanDistance = std::max(std::abs(endPos.x() - startPos.x()),
+                                          std::abs(endPos.y() - startPos.y()));
+  const int manhattanPixels =
+      std::ceil(manhattanDistance / gridMap.getResolution()) + 1;
 
   // Container for results
   std::vector<grid_map::Position3> lineValues;
@@ -57,7 +67,8 @@ std::vector<grid_map::Position3> valuesBetweenLocations(const grid_map::Position
 
   // Line iteration
   grid_map::Position position;
-  for (grid_map::LineIterator iterator(gridMap, startPos, endPos); !iterator.isPastEnd(); ++iterator) {
+  for (grid_map::LineIterator iterator(gridMap, startPos, endPos);
+       !iterator.isPastEnd(); ++iterator) {
     const auto& index = *iterator;
     const auto value = data(index(0), index(1));
 
@@ -70,7 +81,9 @@ std::vector<grid_map::Position3> valuesBetweenLocations(const grid_map::Position
   return lineValues;
 }
 
-grid_map::Position projectToMapWithMargin(const grid_map::GridMap& gridMap, const grid_map::Position& position, double margin) {
+grid_map::Position projectToMapWithMargin(const grid_map::GridMap& gridMap,
+                                          const grid_map::Position& position,
+                                          double margin) {
   const auto length = gridMap.getLength();
   const auto mapPosition = gridMap.getPosition();
 
@@ -102,5 +115,4 @@ grid_map::Position projectToMapWithMargin(const grid_map::GridMap& gridMap, cons
   return projection;
 }
 
-}  // namespace lookup
-}  // namespace grid_map
+}  // namespace grid_map::lookup

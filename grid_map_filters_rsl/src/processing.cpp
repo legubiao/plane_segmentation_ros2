@@ -3,17 +3,18 @@
  * @authors     Fabian Jenelten
  * @date        04.08, 2021
  * @affiliation ETH RSL
- * @brief       Processing filter (everything that is not smoothing or inpainting).
+ * @brief       Processing filter (everything that is not smoothing or
+ * inpainting).
  */
 
 // grid map filters rsl.
 #include <grid_map_filters_rsl/processing.hpp>
 
-namespace grid_map {
-namespace processing {
 
-void dilate(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, const grid_map::Matrix& mask, int kernelSize,
-            bool inpaint) {
+namespace grid_map::processing {
+void dilate(grid_map::GridMap& map, const std::string& layerIn,
+            const std::string& layerOut, const grid_map::Matrix& mask,
+            int kernelSize, bool inpaint) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -49,8 +50,11 @@ void dilate(grid_map::GridMap& map, const std::string& layerIn, const std::strin
 
       // Find maximum in region.
       if (inpaint || !std::isnan(H_in(rowId, colId))) {
-        const auto maxInKernel = H_in_masked.block(cornerRowId, cornerColId, kernelSize, kernelSize).maxCoeffOfFinites();
-        H_out(rowId, colId) = std::isnan(maxInKernel) ? H_in(rowId, colId) : maxInKernel;
+        const auto maxInKernel =
+            H_in_masked.block(cornerRowId, cornerColId, kernelSize, kernelSize)
+                .maxCoeffOfFinites();
+        H_out(rowId, colId) =
+            std::isnan(maxInKernel) ? H_in(rowId, colId) : maxInKernel;
       } else {
         H_out(rowId, colId) = NAN;
       }
@@ -58,8 +62,9 @@ void dilate(grid_map::GridMap& map, const std::string& layerIn, const std::strin
   }
 }
 
-void erode(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, const grid_map::Matrix& mask, int kernelSize,
-           bool inpaint) {
+void erode(grid_map::GridMap& map, const std::string& layerIn,
+           const std::string& layerOut, const grid_map::Matrix& mask,
+           int kernelSize, bool inpaint) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -95,8 +100,11 @@ void erode(grid_map::GridMap& map, const std::string& layerIn, const std::string
 
       // Find minimum in region.
       if (inpaint || !std::isnan(H_in(rowId, colId))) {
-        const auto minInKernel = H_in_masked.block(cornerRowId, cornerColId, kernelSize, kernelSize).minCoeffOfFinites();
-        H_out(rowId, colId) = std::isnan(minInKernel) ? H_in(rowId, colId) : minInKernel;
+        const auto minInKernel =
+            H_in_masked.block(cornerRowId, cornerColId, kernelSize, kernelSize)
+                .minCoeffOfFinites();
+        H_out(rowId, colId) =
+            std::isnan(minInKernel) ? H_in(rowId, colId) : minInKernel;
       } else {
         H_out(rowId, colId) = NAN;
       }
@@ -104,7 +112,8 @@ void erode(grid_map::GridMap& map, const std::string& layerIn, const std::string
   }
 }
 
-void outline(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut) {
+void outline(grid_map::GridMap& map, const std::string& layerIn,
+             const std::string& layerOut) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -133,7 +142,8 @@ void outline(grid_map::GridMap& map, const std::string& layerIn, const std::stri
       }
 
       // Check if grid cell touches the nan grid cell.
-      if (H_in.block(cornerRowId, cornerColId, kernelSize, kernelSize).hasNaN()) {
+      if (H_in.block(cornerRowId, cornerColId, kernelSize, kernelSize)
+              .hasNaN()) {
         H_out(rowId, colId) = H_in(rowId, colId);
       } else {
         H_out(rowId, colId) = NAN;
@@ -142,8 +152,11 @@ void outline(grid_map::GridMap& map, const std::string& layerIn, const std::stri
   }
 }
 
-void applyKernelFunction(grid_map::GridMap& map, const std::string& layerIn, const std::string& layerOut, int kernelSize,
-                         std::function<float(const Eigen::Ref<const grid_map::GridMap::Matrix>&)> func) {
+void applyKernelFunction(
+    grid_map::GridMap& map, const std::string& layerIn,
+    const std::string& layerOut, int kernelSize,
+    std::function<float(const Eigen::Ref<const grid_map::GridMap::Matrix>&)>
+        func) {
   // Create new layer if missing
   if (!map.exists(layerOut)) {
     map.add(layerOut, map.get(layerIn));
@@ -171,10 +184,10 @@ void applyKernelFunction(grid_map::GridMap& map, const std::string& layerIn, con
       }
 
       // Apply user defined function
-      H_out(rowId, colId) = func(H_in.block(cornerRowId, cornerColId, kernelSize, kernelSize));
+      H_out(rowId, colId) =
+          func(H_in.block(cornerRowId, cornerColId, kernelSize, kernelSize));
     }
   }
 }
+} // namespace grid_map::processing
 
-}  // namespace processing
-}  // namespace grid_map

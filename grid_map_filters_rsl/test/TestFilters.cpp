@@ -112,9 +112,11 @@ TEST(TestResampling, resampleUpsample) {  // NOLINT
   inpainting::resample(resampleMap, layerName, newRes);
 
   // Compare geometry
-  const Eigen::Vector2d oldTrueSize(map.getResolution() * map.getSize().x(), map.getResolution() * map.getSize().y());
-  const Eigen::Vector2d newTrueSize(resampleMap.getResolution() * resampleMap.getSize().x(),
-                                    resampleMap.getResolution() * resampleMap.getSize().y());
+  const Eigen::Vector2d oldTrueSize(map.getResolution() * map.getSize().x(),
+                                    map.getResolution() * map.getSize().y());
+  const Eigen::Vector2d newTrueSize(
+      resampleMap.getResolution() * resampleMap.getSize().x(),
+      resampleMap.getResolution() * resampleMap.getSize().y());
   EXPECT_TRUE(newTrueSize.isApprox(oldTrueSize));
   EXPECT_TRUE(resampleMap.getPosition().isApprox(map.getPosition()));
   EXPECT_DOUBLE_EQ(resampleMap.getResolution(), newRes);
@@ -135,9 +137,11 @@ TEST(TestResampling, resampleDownsample) {  // NOLINT
   inpainting::resample(resampleMap, layerName, newRes);
 
   // Compare geometry
-  const Eigen::Vector2d oldTrueSize(map.getResolution() * map.getSize().x(), map.getResolution() * map.getSize().y());
-  const Eigen::Vector2d newTrueSize(resampleMap.getResolution() * resampleMap.getSize().x(),
-                                    resampleMap.getResolution() * resampleMap.getSize().y());
+  const Eigen::Vector2d oldTrueSize(map.getResolution() * map.getSize().x(),
+                                    map.getResolution() * map.getSize().y());
+  const Eigen::Vector2d newTrueSize(
+      resampleMap.getResolution() * resampleMap.getSize().x(),
+      resampleMap.getResolution() * resampleMap.getSize().y());
   EXPECT_TRUE(newTrueSize.isApprox(oldTrueSize));
   EXPECT_TRUE(resampleMap.getPosition().isApprox(map.getPosition()));
   EXPECT_DOUBLE_EQ(resampleMap.getResolution(), newRes);
