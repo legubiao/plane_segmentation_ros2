@@ -17,10 +17,7 @@ find_package(grid_map_filters_rsl REQUIRED)
 # CGAL dependencies (QUIET because they cannot be found by Clion)
 find_package(GMP 4.2 QUIET)
 find_package(MPFR 2.2.1 QUIET)
-find_package(Boost REQUIRED COMPONENTS
-        system
-        filesystem
-)
+include(cmake/ConfigExtras.cmake)
 
 # OpenCv
 find_package(OpenCV REQUIRED)
@@ -104,4 +101,4 @@ if (BUILD_TESTING)
     )
 endif ()
 
-ament_package()
+ament_package(CONFIG_EXTRAS "cmake/ConfigExtras.cmake")

@@ -19,11 +19,6 @@ find_package(convex_plane_decomposition_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS
-        system
-        filesystem
-)
-
 # Cpp standard version
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
