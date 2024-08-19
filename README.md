@@ -7,6 +7,12 @@ In a second step, a local convex approximation can be obtained.
 fork from: https://github.com/leggedrobotics/elevation_mapping_cupy/tree/main/plane_segmentation
 
 ## Usage
+
+### Install dependencies
+```bash
+sudo apt-get install libgmp-dev libmpfr-dev
+```
+
 ### Build
 ```bash
 colcon build --packages-select build convex_plane_decomposition_ros
