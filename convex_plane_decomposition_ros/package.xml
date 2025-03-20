@@ -12,7 +12,6 @@
 
     <depend>rclcpp</depend>
     <depend>grid_map_ros</depend>
-    <depend>grid_map_msgs</depend>
     <depend>geometry_msgs</depend>
     <depend>convex_plane_decomposition</depend>
     <depend>convex_plane_decomposition_msgs</depend>
