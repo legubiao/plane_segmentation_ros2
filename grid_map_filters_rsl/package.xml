@@ -10,13 +10,11 @@
     <license>MIT</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>
-    <build_depend>cmake_clang_tools</build_depend>
 
     <depend>grid_map_cv</depend>
     <depend>grid_map_core</depend>
 
     <test_depend>gtest</test_depend>
-    <test_depend>cmake_code_coverage</test_depend>
 
     <export>
         <build_type>ament_cmake</build_type>

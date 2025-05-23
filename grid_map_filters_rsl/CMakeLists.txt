@@ -78,14 +78,6 @@ install(
         DESTINATION include/${PROJECT_NAME}
 )
 
-###########
-## Clang ##
-###########
-find_package(cmake_clang_tools QUIET)
-if (cmake_clang_tools_FOUND)
-    add_default_clang_tooling()
-endif (cmake_clang_tools_FOUND)
-
 ament_export_dependencies(${dependencies})
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
