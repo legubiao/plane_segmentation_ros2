@@ -1,5 +1,7 @@
 #include "convex_plane_decomposition_ros/ConvexPlaneDecompositionRos.h"
 
+#include <iomanip>
+
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_cv/GridMapCvProcessing.hpp>
 #include <grid_map_ros/GridMapRosConverter.hpp>
