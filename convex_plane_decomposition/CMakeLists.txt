@@ -47,10 +47,16 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME}
         PUBLIC
+        ${cgal5_colcon_INCLUDE_DIRS}
+        ${OpenCV_INCLUDE_DIRS}
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 target_link_libraries(${PROJECT_NAME}
+        ${grid_map_core_TARGETS}
+        ${grid_map_cv_TARGETS}
+        ${grid_map_filters_rsl_TARGETS}
+        ${OpenCV_LIBS}
+        Boost::filesystem
         gmp
         mpfr
 )
@@ -92,11 +98,13 @@ if (BUILD_TESTING)
             test/testRegionGrowing.cpp
             test/testUpsampling.cpp
     )
-    ament_target_dependencies(test_${PROJECT_NAME}
-            ${dependencies}
-    )
     target_link_libraries(test_${PROJECT_NAME}
             ${PROJECT_NAME}
+            ${grid_map_core_TARGETS}
+            ${grid_map_cv_TARGETS}
+            ${grid_map_filters_rsl_TARGETS}
+            ${OpenCV_LIBS}
+            Boost::filesystem
             gmp
             mpfr
     )

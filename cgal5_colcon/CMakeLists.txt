@@ -12,6 +12,7 @@ file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
 set(CGAL_VERSION 5.3)
 ExternalProject_Add(cgal
         URL https://github.com/CGAL/cgal/archive/refs/tags/v${CGAL_VERSION}.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
         UPDATE_COMMAND ""
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
