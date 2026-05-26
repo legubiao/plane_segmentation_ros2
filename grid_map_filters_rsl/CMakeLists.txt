@@ -30,10 +30,21 @@ add_library(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
         PUBLIC
         ${EIGEN3_INCLUDE_DIR}
+        ${grid_map_cv_INCLUDE_DIRS}
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+        ${grid_map_cv_DEFINITIONS}
+)
 
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
+target_link_libraries(${PROJECT_NAME} PUBLIC
+        ${grid_map_cv_LIBRARIES}
+        ${grid_map_cv_TARGETS}
+        ${grid_map_core_TARGETS}
+)
+target_link_options(${PROJECT_NAME} PUBLIC
+        ${grid_map_cv_LINK_FLAGS}
+)
 
 #############
 ## Testing ##
@@ -50,7 +61,6 @@ if (BUILD_TESTING)
             test/TestFilters.cpp
             test/TestLookup.cpp
     )
-    ament_target_dependencies(test_${PROJECT_NAME} ${dependencies})
     target_link_libraries(test_${PROJECT_NAME} ${PROJECT_NAME})
 
     # Generate test coverage report

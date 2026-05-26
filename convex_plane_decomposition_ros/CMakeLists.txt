@@ -37,25 +37,36 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME}
         PUBLIC
+        ${grid_map_ros_INCLUDE_DIRS}
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+        ${grid_map_ros_DEFINITIONS}
+)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+        ${rclcpp_TARGETS}
+        ${grid_map_ros_LIBRARIES}
+        ${grid_map_ros_TARGETS}
+        ${convex_plane_decomposition_TARGETS}
+        ${convex_plane_decomposition_msgs_TARGETS}
+        ${tf2_ros_TARGETS}
+        ${visualization_msgs_TARGETS}
+)
+target_link_options(${PROJECT_NAME} PUBLIC
+        ${grid_map_ros_LINK_FLAGS}
+)
 
 
 add_executable(${PROJECT_NAME}_node src/ConvexPlaneDecompositionNode.cpp)
-ament_target_dependencies(${PROJECT_NAME}_node ${dependencies})
 target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}_add_noise src/noiseNode.cpp)
-ament_target_dependencies(${PROJECT_NAME}_add_noise ${dependencies})
 target_link_libraries(${PROJECT_NAME}_add_noise ${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}_save_elevationmap src/SaveElevationMapAsImageNode.cpp)
-ament_target_dependencies(${PROJECT_NAME}_save_elevationmap ${dependencies})
 target_link_libraries(${PROJECT_NAME}_save_elevationmap ${PROJECT_NAME})
 
 add_executable(${PROJECT_NAME}_approximation_demo_node src/ConvexApproximationDemoNode.cpp)
-ament_target_dependencies(${PROJECT_NAME}_approximation_demo_node ${dependencies})
 target_link_libraries(${PROJECT_NAME}_approximation_demo_node ${PROJECT_NAME})
 
 #############
@@ -86,9 +97,6 @@ ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 #############
 add_executable(${PROJECT_NAME}_TestShapeGrowing
         test/TestShapeGrowing.cpp
-)
-ament_target_dependencies(${PROJECT_NAME}_TestShapeGrowing
-        ${dependencies}
 )
 target_link_libraries(${PROJECT_NAME}_TestShapeGrowing
         ${PROJECT_NAME}
